@@ -21,11 +21,21 @@
         <div class="row text-center justify-content-center"  style="margin:15px;">
             <form method=POST enctype=multipart/form-data action="upload">
                 <input type=file name=myfile>
-
-
                 <input type=submit>
             </form>
         </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+        {% for url in urls %}
+            <div class="col-md-3">
+                <img class="img-responsive" src="{{ url }}" style="height:200px; width:auto; margin: 10px">
+            </div>
+			<div class="col-md-1"></div>		
+					
+		{% endfor %}
     </div>
 
 

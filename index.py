@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from flask import render_template
 from flask import Flask, request 
 import boto3
+
 ACCESS_ID = "AKIAQGGS2CUXE3JTWO4S"
 ACCESS_KEY = "vKNIlIGE1vrV+PZdMb/FtFCXzfjIeFBZv2WR8xd8"
 BUCKET_NAME = 'typito'
@@ -11,20 +12,53 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    urls = ['https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg', 
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
+    ]
+
+    return render_template('index.html', urls=urls)
 
 @app.route('/upload', methods=['POST'])
 def upload():
     s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
-
-    s3.Bucket(BUCKET_NAME).put_object(Key='API_a_python_filev10.jpeg', Body=request.files['myfile'])
+    
+    s3.Bucket(BUCKET_NAME).put_object(Key='API_a_python_file20.jpeg', Body=request.files['myfile'])
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
 
-    final_url = baseUrl + '/API_a_python_filev10.jpeg'
+    final_url = baseUrl + '/API_a_python_filev20.jpeg'
 
-    accessible_url = get_presighned_url(final_url)
-
-    return '<h3>File saved to S3 It saves to {}=========={}</h3>'.format(accessible_url, final_url)
+    return '<h3>File saved to S3</h3>'
 
 
 def get_presighned_url(url):

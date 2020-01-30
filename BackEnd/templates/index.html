@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Typito</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+    <main role="main" class="container-fluid">
+        <div class="row text-center justify-content-center"  style="margin:15px;">
+        <div class="col-12">
+            <div> <h1>Typito Assignment</h1></div>
+        </div>
+        </div>
+    </main>
+
+
+
+    <div class="container-fluid">
+        <div class="row text-center justify-content-center"  style="margin:15px;">
+            <form method=POST enctype=multipart/form-data action="upload">
+                <input type=file name=myfile>
+                <input type=submit>
+            </form>
+        </div>
+    </div>
+
+    <h3 style="margin-left:100px; margin-top: 35px">Top 30 recent Pics</h3>
+    <div class="container">
+        <div class="row">
+        
+        {% for url in urls %}
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <img class="img-responsive" src="{{ url }}" style="height:200px; width:auto; margin: 10px">
+            </div>
+			<div class="col-lg-1 col-md-2 col-sm-1"></div>		
+					
+		{% endfor %}
+    </div>
+
+
+</body>
+</html>

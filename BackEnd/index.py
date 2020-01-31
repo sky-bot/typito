@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from flask import render_template
 from flask import Flask, request 
 import boto3
-import util
+#import util
 from PIL import Image
 ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4" #"AKIAQGGS2CUXE3JTWO4S"
 ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"  # "vKNIlIGE1vrV+PZdMb/FtFCXzfjIeFBZv2WR8xd8"

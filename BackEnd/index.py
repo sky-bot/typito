@@ -1,17 +1,15 @@
-
+import boto3
 from urllib.parse import urlparse
 from flask import render_template
 from flask import Flask, request 
-from flask_cors import CORS
-import boto3
+import flask_cors 
 #import util
 from PIL import Image
 ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4" #"AKIAQGGS2CUXE3JTWO4S"
 ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"  # "vKNIlIGE1vrV+PZdMb/FtFCXzfjIeFBZv2WR8xd8"
 BUCKET_NAME = 'typito'
 app = Flask(__name__)
-cors = CORS(app)
-
+flask_cors.CORS(app, expose_headers='Authorization')
 
 @app.route('/')
 def index():

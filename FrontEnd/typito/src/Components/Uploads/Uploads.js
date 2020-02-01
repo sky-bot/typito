@@ -13,20 +13,27 @@ class Uploads extends Component {
     onChangeHandler(e)
     {
         e.preventDefault();
+        const data = new FormData();
         let files = e.target.files;
-
-        let reader = new FileReader();
-        reader.readAsDataURL(files[0])
+        data.append('myfile', files[0])
+        
+    
+        fetch('http://127.0.0.1:5000/upload', {
+            method: 'POST',
+            body: data,
+        })
+        // let reader = new FileReader();
+        // reader.readAsDataURL(files[0])
         
       
-        reader.onload=(e) => {
-            console.log('Reaching Handler')
-            console.log(e.target.result)
+        // reader.onload=(e) => {
+        //     console.log('Reaching Handler')
+        //     console.log(e.target.result)
 
-        const url = "http://127.0.0.1:5000/upload"
-        const formData={'myfile':e.target.result}
-        return post(url, formData).then(response => console.log(response));
-        }
+        // const url = "http://127.0.0.1:5000/upload"
+        // // const formData={'myfile':e.target.result}
+        // return post(url, formData).then(response => console.log(response));
+        // }
     }
 
 

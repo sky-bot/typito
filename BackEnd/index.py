@@ -3,6 +3,8 @@ from urllib.parse import urlparse
 from flask import render_template
 from flask import Flask, request 
 import flask_cors 
+import json
+from flask import Response
 #import util
 from PIL import Image
 ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4" #"AKIAQGGS2CUXE3JTWO4S"
@@ -13,54 +15,42 @@ flask_cors.CORS(app, expose_headers='Authorization')
 
 @app.route('/')
 def index():
-    urls = ['https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg', 
-    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_a_python_file20.jpeg'
+    urls = ['https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg', 
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg'
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
     ]
 
-    return render_template('index.html', urls=urls)
+    return {'result': urls}
 
 @app.route('/upload', methods=['POST'])
 def upload():
     s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
-    s3.Bucket(BUCKET_NAME).put_object(Key='API_a_python_file20.jpeg', Body=request.files['myfile'])
+    file = request.files['myfile']
+    
+    filename = 'API_' + file.filename
+
+    s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=request.files['myfile'])
 
     # rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-west-2')
     # response = rek.detect_labels(Image={'S3Object':{'Bucket':'typito','Name':'API_a_python_filev13.jpeg'}}, MaxLabels=10)
   
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
 
-    final_url = baseUrl + '/API_a_python_filev20.jpeg'
+    final_url = "{}{}{}".format(baseUrl,'/',filename)
     print ("Uploaded Successfully")
 
     return '<h3>File saved to S3, tags</h3>'

@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 
 import './App.css';
 import UpLoads from './Components/Uploads/Uploads'
+import DownLoads from './Components/DownLoads/DownLoads'
 
 class App extends Component {
 
-  uploadFileHandler = (event) => {
-    event.preventDefault();
-    console.log('Hello')
-    console.log(event.target.files, "$$$$$");
-    // console.log(event.target.files[0], "$$$$")
+  state = {'upload_status': "p"}
 
+  uploadStatusHandler(event){
+      this.setState({'upload_status': event.target.value})
   }
 
   render() {
@@ -21,7 +20,11 @@ class App extends Component {
         </header>
         <UpLoads 
           uploadHandler={this.uploadFileHandler}
+          upload_status={this.uploadStatusHandler}
         />
+        <DownLoads/>
+
+        <h3>{this.state.upload_status}</h3>
       </div>
     );
   }

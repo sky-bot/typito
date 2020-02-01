@@ -17,8 +17,10 @@ class Uploads extends Component {
 
         let reader = new FileReader();
         reader.readAsDataURL(files[0])
-
+        
+      
         reader.onload=(e) => {
+            console.log('Reaching Handler')
             console.log(e.target.result)
 
         const url = "http://127.0.0.1:5000/upload"
@@ -32,6 +34,7 @@ class Uploads extends Component {
         return (
             <div onSubmit={this.onFormSubmit}>
                 <input type="file" name="file" onChange={(e)=>this.onChangeHandler(e)}/>
+                <button type="button" onClick={this.handleLogin}>Submit</button>
             </div>
         );
     }

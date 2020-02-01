@@ -2,6 +2,7 @@
 from urllib.parse import urlparse
 from flask import render_template
 from flask import Flask, request 
+from flask_cors import CORS
 import boto3
 #import util
 from PIL import Image
@@ -9,6 +10,7 @@ ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4" #"AKIAQGGS2CUXE3JTWO4S"
 ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"  # "vKNIlIGE1vrV+PZdMb/FtFCXzfjIeFBZv2WR8xd8"
 BUCKET_NAME = 'typito'
 app = Flask(__name__)
+cors = CORS(app)
 
 
 @app.route('/')
@@ -53,7 +55,6 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
-    
     s3.Bucket(BUCKET_NAME).put_object(Key='API_a_python_file20.jpeg', Body=request.files['myfile'])
 
     # rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-west-2')
@@ -62,6 +63,7 @@ def upload():
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
 
     final_url = baseUrl + '/API_a_python_filev20.jpeg'
+    print ("Uploaded Successfully")
 
     return '<h3>File saved to S3, tags</h3>'
 

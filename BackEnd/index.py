@@ -5,7 +5,7 @@ from flask import Flask, request
 import flask_cors 
 import json
 from flask import Response
-#import util
+
 from PIL import Image
 ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4" #"AKIAQGGS2CUXE3JTWO4S"
 ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"  # "vKNIlIGE1vrV+PZdMb/FtFCXzfjIeFBZv2WR8xd8"
@@ -15,7 +15,27 @@ flask_cors.CORS(app, expose_headers='Authorization')
 
 @app.route('/')
 def index():
+    params = request.args
+    try: 
+        page = int(params.get('page')) or 1
+        perPage = int(params.get('perPage')) or 8
+    except TypeError as e:
+        page = 1
+        perPage = 8
+    firstIndex = (page-1)*perPage
+    lastIndex = page*perPage
+    print('page: '+str(page))
+    print('perPage: '+str(perPage))
+    print('firstIndex: ', firstIndex)
+    print('lastIndex: ',lastIndex)
     urls = ['https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg', 
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
     'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
     'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
     'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
@@ -34,7 +54,7 @@ def index():
     'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
     ]
 
-    return json.dumps({'result': urls})
+    return json.dumps({'result': urls[firstIndex:lastIndex], 'count': len(urls)})
 
 @app.route('/upload', methods=['POST'])
 def upload():

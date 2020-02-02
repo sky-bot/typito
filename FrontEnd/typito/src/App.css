@@ -15,6 +15,9 @@
   font-family: 'Pacifico', cursive;
   margin-bottom: 1.5em;
   margin-top:1.5em;
+  background-image: url('heading2.jpeg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .App-link {

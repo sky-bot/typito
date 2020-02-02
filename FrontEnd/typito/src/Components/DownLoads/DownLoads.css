@@ -1,0 +1,14 @@
+.UploadedPic {
+    width: 260px;
+    height: auto;
+    margin:1em;
+    /* margin-left: 0em; */
+    box-shadow: 10px 10px 10px rgb(158, 156, 156); 
+  }
+
+.Jumbo{
+    margin: 1em;
+    margin-left: 9em;
+    margin-right: 9em;
+    background-color: azure
+}

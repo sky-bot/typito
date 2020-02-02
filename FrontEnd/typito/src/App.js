@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import { Button } from 'react-bootstrap';
-// {/* <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet"></link>  */}
+import Jumbotron from 'react-bootstrap/Jumbotron'
 import './App.css';
 import UpLoads from './Components/Uploads/Uploads'
 import DownLoads from './Components/DownLoads/DownLoads'
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 class App extends Component {
 
-  state = {'urls': ""}
+  state = {'urls': "",
+    allposts: [],
+    posts: [],
+    hasMore: true,
+    curpage: 0,
+    pagesize: 30,
+    totalPage: 0,
+    total: 0
+}
 
   uploadStatusHandler(event){
       this.setState({'upload_status': event.target.value})
@@ -54,13 +62,13 @@ class App extends Component {
           uploadHandler={this.uploadFileHandler}
           upload_status={this.uploadStatusHandler}
         />
-        <DownLoads/>
+        {/* <DownLoads/> */}
 
-      { pics }
+      <Jumbotron fluid className="Jumbo">{ pics }</Jumbotron>
       </div>
     );
   }
-  
+ 
 }
 
 export default App;

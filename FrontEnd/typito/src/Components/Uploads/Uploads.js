@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
 class Uploads extends Component {
     
 
@@ -24,7 +25,7 @@ class Uploads extends Component {
             <div>
                 <div onSubmit={this.onFormSubmit} >
                     <input type="file" name="file" onChange={(e)=>this.onChangeHandler(e)} />
-                    <button type="button" onClick={this.handleLogin}>Submit</button>
+                    <Button variant="success" className="mr-2" onClick={this.handleLogin}>Submit</Button>
                 </div>  
             </div>
         );

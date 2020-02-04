@@ -4,12 +4,14 @@ import Jumbotron from 'react-bootstrap/Jumbotron'
 import './App.css';
 import UpLoads from './Components/Uploads/Uploads'
 import DownLoads from './Components/DownLoads/DownLoads'
+// import Spinner from 'spinner'
 // import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 class App extends Component {
 
   state = {
-    "allurls": []
+    "allurls": [],
+    "uploading": false
 }
 
   uploadStatusHandler(event){
@@ -22,7 +24,6 @@ class App extends Component {
     const urls = this.state.allurls
     
     for (let i=0; i<urls.length;i++){
-      
       pics.push(<img src={urls[i]} alt="pic" className="UploadedPic"/>)
     }
 

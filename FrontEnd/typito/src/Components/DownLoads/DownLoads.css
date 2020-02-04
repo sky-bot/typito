@@ -1,14 +1,30 @@
 .UploadedPic {
-    width: 260px;
+    width: 230px;
     height: auto;
     margin:1em;
     /* margin-left: 0em; */
-    box-shadow: 10px 10px 10px rgb(158, 156, 156); 
+
   }
 
 .Jumbo{
     margin: 1em;
     margin-left: 9em;
     margin-right: 9em;
-    background-color: azure
+    background-color: rgb(213, 253, 247);
+  }
+
+.tags {
+  /* width: 150px; */
+  height: auto;
+  font-size: 1.2em;
+  text-align: center;
+  
+}
+
+.imagerow {
+  display: inline-block;
+  text-align: center;
+  box-shadow: 10px 10px 10px rgb(173, 172, 172); 
+  background-color: rgb(247, 248, 248);
+  margin: 1em;
 }

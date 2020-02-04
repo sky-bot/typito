@@ -18,38 +18,51 @@ def index():
     params = request.args
     try: 
         page = int(params.get('page')) or 1
-        perPage = int(params.get('perPage')) or 8
+        perPage = int(params.get('perPage')) or 4
     except TypeError as e:
         page = 1
         perPage = 8
     firstIndex = (page-1)*perPage
     lastIndex = page*perPage
    
-    urls = ['https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg', 
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    ]
+    # urls = ['https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg', 
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+    # ]
+    urls = [{'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']},{'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}]
 
     return json.dumps({'result': urls[firstIndex:lastIndex], 'count': len(urls)})
 

@@ -17,7 +17,7 @@ class Uploads extends Component {
             body: data,
         })
 
-        
+
     }
 
 

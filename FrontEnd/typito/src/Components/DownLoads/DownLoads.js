@@ -60,10 +60,10 @@ class DownLoads extends Component {
     render() {
     const pics = []
     const urls = this.state.urls
-    console.log(urls)
+    
 
     for (let i=0; i<urls.length;i++){
-        console.log(urls[i])
+        
         pics.push(<img src={urls[i]} alt="pic" className="UploadedPic"/>)
     }
         return (

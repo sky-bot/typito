@@ -24,10 +24,7 @@ def index():
         perPage = 8
     firstIndex = (page-1)*perPage
     lastIndex = page*perPage
-    print('page: '+str(page))
-    print('perPage: '+str(perPage))
-    print('firstIndex: ', firstIndex)
-    print('lastIndex: ',lastIndex)
+   
     urls = ['https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg', 
     'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
     'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
@@ -62,18 +59,25 @@ def upload():
     file = request.files['myfile']
     
     filename = 'API_' + file.filename
+    print(filename)
+    try:
+        data = request.files['myfile']
+        s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=data)
+   
+        rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-east-2')
+        response = rek.detect_labels(Image={'S3Object':{'Bucket':'typito','Name': filename}}, MaxLabels=3, MinConfidence = 80)
+        lables_list = response.get('Labels')
+        tags = [tags.get('Name') for tags in lables_list]
+        print(tags)
 
-    s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=request.files['myfile'])
-
-    # rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-west-2')
-    # response = rek.detect_labels(Image={'S3Object':{'Bucket':'typito','Name':'API_a_python_filev13.jpeg'}}, MaxLabels=10)
-  
+    except Exception as e:
+        print(e)
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
 
     final_url = "{}{}{}".format(baseUrl,'/',filename)
     print ("Uploaded Successfully")
 
-    return '<h3>File saved to S3, tags</h3>'
+    return "Uploaded Successfully"
 
 
 def get_presighned_url(url):
@@ -96,29 +100,5 @@ def get_presighned_url(url):
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-
-
-# https://typito.s3.us-east-2.amazonaws.com/API/a_python_filev9.jpeg
-# {
-#     "Version": "2012-10-17",
-#     "Id": "Policy1488494182833",
-#     "Statement": [
-#         {
-#             "Sid": "Stmt1488493308547",
-#             "Effect": "Allow",
-#             "Principal": "*",
-#             "Action": [
-#                 "s3:ListBucket",
-#                 "s3:ListBucketVersions",
-#                 "s3:GetBucketLocation",
-#                 "s3:Get*",
-#                 "s3:Put*"
-#             ],
-#             "Resource": [
-#                 "arn:aws:s3:::typito",
-#                 "arn:aws:s3:::typito/*"
-#             ]
-#         }
-#     ]
-# }
+# API_IMG_20190629_145722.jpg
+# API_IMG_20190629_145722.jpg

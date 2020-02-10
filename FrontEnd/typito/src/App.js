@@ -15,10 +15,6 @@ class App extends Component {
     "endDate": null
   }
 
-  uploadStatusHandler(event) {
-    this.setState({ 'upload_status': event.target.value })
-  }
-
   render() {
 
     const pics = []
@@ -34,11 +30,8 @@ class App extends Component {
         <header className="App-header">
           <h1> SkyLinsta </h1>
         </header>
-        <UpLoads
-          uploadHandler={this.uploadFileHandler}
-          upload_status={this.uploadStatusHandler}
-        />
-        <Search />
+        <UpLoads/>
+        <Jumbotron className="Jumbo_Search"><Search /></Jumbotron>
 
         <DownLoads />
         {/* <Jumbotron fluid className="Jumbo">{ pics }</Jumbotron> */}

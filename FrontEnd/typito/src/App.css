@@ -37,6 +37,19 @@
 
 .Jumbo {
   margin-top:1em;
-  /* box-shadow: 10px 10px 10px rgb(194, 192, 192); */
   background-color: rgb(241, 238, 238)
+}
+
+.Jumbo_Search {
+  margin-top: 0em;
+  margin-bottom: 0em;
+  height: 0.5em;
+  padding-top: 10px;
+  margin: 1em;
+  margin-left: 9em;
+  margin-right: 9em;
+  display: flex;
+  justify-content: flex start; 
+  background-color: #c93838
+  
 }

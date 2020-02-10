@@ -52,12 +52,6 @@ class Uploads extends Component {
             <div>
                 <div>
                     <input className="uploadInput" type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
-                    {/* <label className="label">From</label>
-                    <input type="date" name="startdate" onChange={(e) => this.startDateChangeHandler(e)} />
-                    <label className="label">To</label>
-                    <input type="date" name="enddate" onChange={(e) => this.endDateChangeHandler(e)} />
-                    <input className="label" type="text" name='tagSearch' placeholder=" TagSearch" onChange={(e) => this.endDateChangeHandler(e)}/>
-                    <button type="submit" onClick={this.formHandler}>Submit</button> */}
                 </div>
                 <h4 className="Status">{this.state.status}</h4>
                 

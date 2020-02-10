@@ -51,7 +51,6 @@ image_schema = ImagesSchema()
 
 @app.route('/')
 def index():
-    print('sqlite:///' + os.path.join(basedir, 'data.db'))
     params = request.args
     try: 
         page = int(params.get('page')) or 1
@@ -90,31 +89,30 @@ def upload():
         data = request.files['myfile']
         s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=data)
    
-        # rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-east-2')
-        # response = rek.detect_labels(Image={'S3Object':{'Bucket':'typito','Name': filename}}, MaxLabels=3, MinConfidence = 80)
-        # lables_list = response.get('Labels')
-        # tags = [tags.get('Name') for tags in lables_list]
-        tags = ['akash', 'computer', 'white']
+        rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-east-2')
+        response = rek.detect_labels(Image={'S3Object':{'Bucket':'typito','Name': filename}}, MaxLabels=3, MinConfidence = 80)
+        lables_list = response.get('Labels')
+        tags = [tags.get('Name') for tags in lables_list]
+        
         print(tags)
         now = datetime.now()
         year = now.year
         month = now.month
         day = now.day
-        print(tags, now, "===", day, month, year)
+       
 
     except Exception as e:  
-        print("================")
         print(e)
 
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
     final_url = "{}{}{}".format(baseUrl,'/',filename)
-    
+    print(tags, final_url, day, month, year)
     new_entry = Images(final_url, json.dumps(tags), day, month, year)
     db.create_all()
     db.session.add(new_entry)
     db.session.commit()
 
-    return "Uploaded Successfully"
+    return json.dumps({'status':"Uploaded SuccessFully :)"})
 
 
 def get_presighned_url(url):

@@ -1,10 +1,14 @@
 import boto3
 from urllib.parse import urlparse
 from flask import render_template
-from flask import Flask, request 
+from flask import Flask, request, jsonify
 import flask_cors 
 import json
 from flask import Response
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
+import os
+from datetime import datetime
 
 from PIL import Image
 ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4" #"AKIAQGGS2CUXE3JTWO4S"
@@ -13,8 +17,41 @@ BUCKET_NAME = 'typito'
 app = Flask(__name__)
 flask_cors.CORS(app, expose_headers='Authorization')
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+#DB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'Images.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
+    
+class Images(db.Model):
+    
+    log_id = db.Column(db.Integer, primary_key= True)
+    url = db.Column(db.String(100), unique=True)
+    tags = db.Column(db.String(100), unique=True)
+    day = db.Column(db.Integer)
+    month = db.Column(db.Integer)
+    year = db.Column(db.Integer)
+
+    def __init__(self, url, tags, day, month, year):
+        self.url = url
+        self.tags = tags
+        self.day = day
+        self.month = month
+        self.year = year
+    
+class ImagesSchema(ma.Schema):
+    class Meta:
+        fields = ('log_id', 'url', 'tags', 'day', 'month', 'year')
+
+image_schema = ImagesSchema()
+
 @app.route('/')
 def index():
+    print('sqlite:///' + os.path.join(basedir, 'data.db'))
     params = request.args
     try: 
         page = int(params.get('page')) or 1
@@ -25,37 +62,13 @@ def index():
     firstIndex = (page-1)*perPage
     lastIndex = page*perPage
    
-    # urls = ['https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg', 
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-    # ]
+  
     urls = [{'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
             'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_IMG-20191010-WA0003.jpg',
             'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_IMG-20191010-WA0003.jpg',
+            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_IMG-20191010-WA0003.jpg',
             'tags': ['tree', 'hills', 'rivers']},{'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
             'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
             'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
@@ -77,18 +90,29 @@ def upload():
         data = request.files['myfile']
         s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=data)
    
-        rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-east-2')
-        response = rek.detect_labels(Image={'S3Object':{'Bucket':'typito','Name': filename}}, MaxLabels=3, MinConfidence = 80)
-        lables_list = response.get('Labels')
-        tags = [tags.get('Name') for tags in lables_list]
+        # rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-east-2')
+        # response = rek.detect_labels(Image={'S3Object':{'Bucket':'typito','Name': filename}}, MaxLabels=3, MinConfidence = 80)
+        # lables_list = response.get('Labels')
+        # tags = [tags.get('Name') for tags in lables_list]
+        tags = ['akash', 'computer', 'white']
         print(tags)
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+        print(tags, now, "===", day, month, year)
 
-    except Exception as e:
+    except Exception as e:  
+        print("================")
         print(e)
-    baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
 
+    baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
     final_url = "{}{}{}".format(baseUrl,'/',filename)
-    print ("Uploaded Successfully")
+    
+    new_entry = Images(final_url, json.dumps(tags), day, month, year)
+    db.create_all()
+    db.session.add(new_entry)
+    db.session.commit()
 
     return "Uploaded Successfully"
 

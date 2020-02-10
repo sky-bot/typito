@@ -1,7 +1,10 @@
 .UploadedPic {
     width: 230px;
-    height: auto;
+    height: 150px;
     margin:1em;
+    flex-shrink: 0;
+    flex-grow: 0;
+    /* align-self: flex-start; */
     /* margin-left: 0em; */
 
   }
@@ -11,6 +14,9 @@
     margin-left: 9em;
     margin-right: 9em;
     background-color: rgb(213, 253, 247);
+    display: flex;
+    justify-content: flex start;
+   
   }
 
 .tags {
@@ -22,9 +28,21 @@
 }
 
 .imagerow {
-  display: inline-block;
-  text-align: center;
+  /* display: inline-block; */
+  /* text-align: center; */
   box-shadow: 10px 10px 10px rgb(173, 172, 172); 
   background-color: rgb(247, 248, 248);
   margin: 1em;
+  align-self: flex-start;
+  flex-flow: column;
+}
+
+.urls {
+  /* display: inline-block; */
+  display: flex;
+  flex-wrap: wrap;
+  /* flex-shrink: 0 */
+  /* text-align: center; */
+  /* align-self: flex-start; */
+  /* flex-flow: column; */
 }

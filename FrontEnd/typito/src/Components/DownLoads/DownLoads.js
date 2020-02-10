@@ -68,13 +68,12 @@ class DownLoads extends Component {
 
     render() {
     const pics = []
-    const urls = this.state.urls
     const url_obj = this.state.url_obj
 
     
 
     for (let i=0; i<url_obj.length;i++){    
-        pics.push(<div className="imagerow"><img src={url_obj[i].url} alt="pic" className="UploadedPic"/><h4 className="tags"><b><i>Tags:</i></b>{url_obj[i].tags.join(",")}</h4></div>)
+        pics.push(<div className="imagerow box"><img src={url_obj[i].url} alt="pic" className="UploadedPic"/><h4 className="tags"><b><i>Tags:</i></b>{url_obj[i].tags.join(",")}</h4></div>)
     }
         return (    
             <div>

@@ -10,7 +10,10 @@ class Uploads extends Component {
         e.preventDefault();
         const data = new FormData();
         let files = e.target.files;
+        // console.log(this.input.target)
+        console.log("============================================================")
         data.append('myfile', files[0])
+        console.log("data====>", data)
         
         fetch('http://127.0.0.1:5000/upload', {
             method: 'POST',
@@ -26,7 +29,7 @@ class Uploads extends Component {
             <div>
                 <div onSubmit={this.onFormSubmit} >
                     <input type="file" name="file" onChange={(e)=>this.onChangeHandler(e)} />
-                    <Button variant="success" className="mr-2" onClick={this.handleLogin}>Submit</Button>
+                    
                 </div>  
             </div>
         );

@@ -7,7 +7,7 @@ class DownLoads extends Component {
 
     state = { 
         urls: [],
-        perPage: 4,
+        perPage: 8,
         page: 1,
         totalPage: null,
         scrolling: false,

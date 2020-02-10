@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Uploads.css'
+import './Search.css'
 
 
-
-class Uploads extends Component {
+class Search extends Component {
 
     state = {
         'status': "",
@@ -22,26 +21,6 @@ class Uploads extends Component {
         this.setState({'endDate': e.target.value})
     }
 
-    onChangeHandler(e) {
-        e.preventDefault();
-        const data = new FormData();
-        let files = e.target.files;
-
-        data.append('myfile', files[0])
-        console.log("data====>", data)
-
-        fetch('http://127.0.0.1:5000/upload', {
-            method: 'POST',
-            body: data,
-        }).then(responce => responce.json())
-            .then(json => {
-                console.log("New Implementation")
-                this.setState({ "status": json.status })
-                setTimeout(function () {
-                    this.setState({"status": ""});
-                }.bind(this), 5000);
-            })
-    }
 
     formHandler() {
         console.log("formHandler")
@@ -51,13 +30,12 @@ class Uploads extends Component {
         return (
             <div>
                 <div>
-                    <input className="uploadInput" type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
-                    {/* <label className="label">From</label>
+                    <label className="label">From</label>
                     <input type="date" name="startdate" onChange={(e) => this.startDateChangeHandler(e)} />
                     <label className="label">To</label>
                     <input type="date" name="enddate" onChange={(e) => this.endDateChangeHandler(e)} />
                     <input className="label" type="text" name='tagSearch' placeholder=" TagSearch" onChange={(e) => this.endDateChangeHandler(e)}/>
-                    <button type="submit" onClick={this.formHandler}>Submit</button> */}
+                    <button type="submit" onClick={this.formHandler}>Submit</button>
                 </div>
                 <h4 className="Status">{this.state.status}</h4>
                 
@@ -66,4 +44,4 @@ class Uploads extends Component {
     }
 }
 
-export default Uploads;
+export default Search;

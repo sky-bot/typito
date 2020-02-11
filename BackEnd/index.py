@@ -206,12 +206,10 @@ def search():
     query = "{} {}".format(query, "order by log_id desc")
     urls2 = []
     with engine.connect() as con:
-
         rs = con.execute(query)
-
         for row in rs:
             urls2.append(row_to_dict(row))
-
+            
     return json.dumps({'result': urls2, 'count': len(urls2)})
 
 

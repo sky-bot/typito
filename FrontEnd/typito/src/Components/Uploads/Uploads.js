@@ -54,7 +54,6 @@ class Uploads extends Component {
                     <input className="uploadInput" type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
                 </div>
                 <h4 className="Status">{this.state.status}</h4>
-                
             </div>
         );
     }

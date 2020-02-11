@@ -31,7 +31,7 @@ class App extends Component {
           <h1> SkyLinsta </h1>
         </header>
         <UpLoads/>
-        <Jumbotron className="Jumbo_Search"><Search /></Jumbotron>
+        {/* <Jumbotron className="Jumbo_Search"><Search /></Jumbotron> */}
 
         <DownLoads />
         {/* <Jumbotron fluid className="Jumbo">{ pics }</Jumbotron> */}

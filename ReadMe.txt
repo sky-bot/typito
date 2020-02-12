@@ -18,6 +18,8 @@ Thought of using but not implemented:
 Presigned Url(giving image Permissions for some period of time).
 Amazon RDS for data Storage for Scaling.
 Refresing page when Upload image takes place.
+Reduce the size of image before uploading.
+Zipping of request-response of getting faster response 
 
 What I Learn:
 Learn a lot about React

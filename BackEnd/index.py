@@ -8,7 +8,7 @@ from flask import Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
-from datetime import datetime
+from datetime import datetime, date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
@@ -16,11 +16,12 @@ from sqlalchemy import create_engine
 from flask_migrate import Migrate
 from sqlalchemy import inspect
 import os
+from sqlalchemy.sql import func
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4" #"AKIAQGGS2CUXE3JTWO4S"
-ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"  # "vKNIlIGE1vrV+PZdMb/FtFCXzfjIeFBZv2WR8xd8"
+ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4"
+ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"
 BUCKET_NAME = 'typito'
 app = Flask(__name__)
 flask_cors.CORS(app, expose_headers='Authorization')
@@ -43,18 +44,22 @@ class Images(db.Model):
     day = db.Column(db.Integer)
     month = db.Column(db.Integer)
     year = db.Column(db.Integer)
+    date = db.Column(db.DateTime)
+    desc = db.Column(db.String(100))
 
-    def __init__(self, url, tags, day, month, year):
+    def __init__(self, url, tags, day, month, year, date, desc):
         self.url = url
         self.tags = tags
         self.day = day
         self.month = month
         self.year = year
+        self.date = date
+        self.desc = desc
 
 
 class ImagesSchema(ma.Schema):
     class Meta:
-        fields = ('log_id', 'url', 'tags', 'day', 'month', 'year')
+        fields = ('log_id', 'url', 'tags', 'day', 'month', 'year', "date", "desc")
 
 image_schema = ImagesSchema()
 
@@ -63,7 +68,7 @@ def index():
     params = request.args
     try: 
         page = int(params.get('page')) or 1
-        perPage = int(params.get('perPage')) or 4
+        perPage = int(params.get('perPage')) or 8
     except TypeError as e:
         page = 1
         perPage = 8
@@ -74,25 +79,7 @@ def index():
     for image in all_images:
         temp = row2dict(image)
         temp['tags'] = json.loads(temp.get('tags') or ["No data Available"])
-        urls2.append(temp)
-    
-    urls = [{'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_IMG-20191010-WA0003.jpg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_IMG-20191010-WA0003.jpg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_IMG-20191010-WA0003.jpg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}, {'url': 'https://typito.s3.us-east-2.amazonaws.com/API_photo-1441974231531-c6227db76b6e.jpeg',
-            'tags': ['tree', 'hills', 'rivers']}]
-
-    
-    
-
+        urls2.append(temp) 
 
     lastIndex = min(page * perPage, len(urls2))
     return json.dumps({'result': urls2[firstIndex:lastIndex], 'count': len(urls2)})
@@ -131,10 +118,15 @@ def upload():
     month = now.month
     day = now.day
 
+    from datetime import date
+    today = date.today()
+# dd/mm/YY
+    today = today.strftime("%d/%m/%Y")
+
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
     final_url = "{}{}{}".format(baseUrl, '/', filename)
-
-    new_entry = Images(final_url, json.dumps(tags), day, month, year)
+    desc = "testing"
+    new_entry = Images(final_url, json.dumps(tags), day, month, year, desc)
 
     db.session.add(new_entry)
     db.session.commit()
@@ -157,59 +149,79 @@ def get_presighned_url(url):
 
     return pre_signed_url
 
+def give_constraints_vals(constaints_name, search_key):
+    first_index_tags = search_key.find(constaints_name) + len(constaints_name)
+    last_index_tags = search_key[first_index_tags:].find(" ") + first_index_tags
+    return search_key[first_index_tags:last_index_tags]
+
 
 @app.route('/search')
 def search():
     params = request.args
-    search_key = "*%2434"
 
     search_key = params.get('search')
-    date = params.get('date')
-    day = None
-    month = None
-    year = None
-
-    if date:
-        day = date.split('-')[0]
-        month = date.split('-')[1]
-        year = date.split('-')[2]
-
     query = "Select * from Images"
-    looking_for = "%{}%".format(search_key)
+    where_clause = "where"
 
-    constaints_clause = "where"
+    if "tags:" in search_key:
+        all_tags = give_constraints_vals("tags:", search_key)
+        tags = search_key.split(',')
+        tags_with_or = "|".join(tags)    
+        tags_clause = "tags REGEXP '{}'".format(tags_with_or) 
 
-    if search_key:
-        query = "{} {} {} '{}' ".format(query, constaints_clause, "tags like", looking_for)
+        query = "{} {} {}".format(query, where_clause, tags_clause)
 
-    if day and '*' not in month:
-        day_clause = "day = {}".format(day)
-        if constaints_clause in query:
-            query = "{} {} {}".format(query, "and", day_clause)
-        else:
+    if "date" in search_key:
+        date_val = give_constraints_vals("date:", search_key)
+        day = date_val.split('-')[0]
+        month = date_val.split('-')[1]
+        year = date_val.split('-')[2]
+
+        if '*' not in day:
+            day_clause = "day = {}".format(day)
+            if where_clause in query:
+                query = "{} {} {}".format(query, "and", day_clause)
+            else:
+                query = "{} {} {}".format(query, where_clause, day_clause)
            
-            query = "{} {} {}".format(query, constaints_clause, day_clause)
-           
-    if month and '*' not in month:
-        month_clause = "month = {}".format(month)
-        if constaints_clause in query:
-            query = "{} {} {}".format(query, "and", day_clause)
-        else:
-            query = "{} {} {}".format(query, constaints_clause, month_clause)
+        if '*' not in month:
+            month_clause = "month = {}".format(month)
+            if where_clause in query:
+                query = "{} {} {}".format(query, "and", day_clause)
+            else:
+                query = "{} {} {}".format(query, where_clause, month_clause)
 
-    if year and '*' not in month:
-        year_clause = "year = {}".format(year)
-        if constaints_clause in query:
-            query = "{} {} {}".format(query, "and", day_clause)
-        else:
-            query = "{} {} {}".format(query, constaints_clause, year_clause)
+        if '*' not in year:
+            year_clause = "year = {}".format(year)
+            if where_clause in query:
+                query = "{} {} {}".format(query, "and", day_clause)
+            else:
+                query = "{} {} {}".format(query, where_clause, year_clause)
+           
+    from_date = '2020-01-01'
+    now = datetime.now()
+    to_date = '{}-{}-{}'.format(now.year, now.month, now.day)
+    if 'from' in search_key:
+        from_date = give_constraints_vals('from:', search_key)
+    from_date_clause = "DATE(date) >= {}".format(from_date_clause)
+
+    if 'to' in search_key:
+        to_date = give_constraints_vals("to:")
+    to_date_clause = "DATE(date) <= {}".format(from_date_clause)
+
+    if where_clause in query:
+        query = "{} {} {} {} {}".format(query, "and", from_date_clause, "and", to_date_clause)
+    else:
+        query = "{} {} {} {} {}".format(query, where_clause, from_date_clause, "and", to_date_clause)
+
     query = "{} {}".format(query, "order by log_id desc")
     urls2 = []
+    print(query)
     with engine.connect() as con:
         rs = con.execute(query)
         for row in rs:
             urls2.append(row_to_dict(row))
-            
+
     return json.dumps({'result': urls2, 'count': len(urls2)})
 
 

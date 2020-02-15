@@ -99,7 +99,7 @@ def upload():
     desc = request.values.get('desc')
     file = request.files.get('myfile')
     filename = 'API_' + file.filename
-    print(filename)
+    print(filename, desc)
     try:
         data = request.files['myfile']
         s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=data)

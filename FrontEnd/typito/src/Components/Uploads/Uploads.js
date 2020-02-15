@@ -6,11 +6,22 @@ import './Uploads.css'
 
 class Uploads extends Component {
 
-    state = {
-        'status': "",
-        'file': null,
-        'desc': ""
-    }
+    // state = {
+    //     'status': "",
+    //     'file': null,
+    //     'desc': ""
+    // }
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            'status': "",
+            'file':null,
+            'desc': "",
+        }
+        this.formHandler = this.formHandler.bind(this)
+      }
+
 
 
     onChangeHandler(e) {
@@ -18,9 +29,35 @@ class Uploads extends Component {
         const data = new FormData();
         let files = e.target.files;
 
-        data.append('myfile', files[0])
-
+        this.setState({'file': files[0]})
+        // data.append('desc', "testing second time")
         console.log("data====>", data)
+
+        // fetch('http://127.0.0.1:5000/upload', {
+        //     method: 'POST',
+        //     body: data,
+        // }).then(responce => responce.json())
+        //     .then(json => {
+        //         console.log("New Implementation")
+        //         this.setState({ "status": json.status })
+        //         setTimeout(function () {
+        //             this.setState({"status": ""});
+        //         }.bind(this), 5000);
+        //     })
+    }
+
+    formHandler() {
+        // e.preventDefault();
+        console.log("formHandler")
+        
+        const data = new FormData();
+        let file = this.state.file;
+        let desc = this.state.desc;
+
+        data.append('myfile', file)
+        data.append('desc', desc)
+        console.log("data====>", data)
+
 
         fetch('http://127.0.0.1:5000/upload', {
             method: 'POST',
@@ -33,10 +70,6 @@ class Uploads extends Component {
                     this.setState({"status": ""});
                 }.bind(this), 5000);
             })
-    }
-
-    formHandler() {
-        console.log("formHandler")
     }
 
     descChangeHandler(e) {
@@ -55,7 +88,7 @@ class Uploads extends Component {
                     <input className="uploadInput" type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
                     <label><b>Desc: </b></label>
                     <input className="uploadInput" type="text" name="desc" onChange={(e)=> this.descChangeHandler(e)}></input>
-
+                    <button type="submit" onClick={this.formHandler}>Submit</button>
                 </div>
                 <h4 className="Status">{this.state.status}</h4>
             </div>

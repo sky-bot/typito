@@ -6,18 +6,14 @@ import './Uploads.css'
 
 class Uploads extends Component {
 
-    // state = {
-    //     'status': "",
-    //     'file': null,
-    //     'desc': ""
-    // }
+    
 
     constructor(props) {
         super(props)
         this.state = {
             'status': "",
             'file':null,
-            'desc': "",
+            'desc': " ",
         }
         this.formHandler = this.formHandler.bind(this)
       }
@@ -30,25 +26,10 @@ class Uploads extends Component {
         let files = e.target.files;
 
         this.setState({'file': files[0]})
-        // data.append('desc', "testing second time")
-        console.log("data====>", data)
 
-        // fetch('http://127.0.0.1:5000/upload', {
-        //     method: 'POST',
-        //     body: data,
-        // }).then(responce => responce.json())
-        //     .then(json => {
-        //         console.log("New Implementation")
-        //         this.setState({ "status": json.status })
-        //         setTimeout(function () {
-        //             this.setState({"status": ""});
-        //         }.bind(this), 5000);
-        //     })
     }
 
     formHandler() {
-        // e.preventDefault();
-        console.log("formHandler")
         
         const data = new FormData();
         let file = this.state.file;
@@ -56,7 +37,7 @@ class Uploads extends Component {
 
         data.append('myfile', file)
         data.append('desc', desc)
-        console.log("data====>", data)
+
 
 
         fetch('http://127.0.0.1:5000/upload', {
@@ -64,18 +45,20 @@ class Uploads extends Component {
             body: data,
         }).then(responce => responce.json())
             .then(json => {
-                console.log("New Implementation")
+
                 this.setState({ "status": json.status })
                 setTimeout(function () {
                     this.setState({"status": ""});
                 }.bind(this), 5000);
+               
             })
+        console.log("It seems working")
+         this.setState({'desc': "", 'file': null})
+         this.fileInput.value = "";
     }
 
     descChangeHandler(e) {
         e.preventDefault()
-        console.log("inside desc Handler")
-        console.log(e.target.value)
         this.setState({'desc':e.target.value})
 
     }
@@ -85,9 +68,9 @@ class Uploads extends Component {
             <div>
                 <div>
                     <label><b>UpLoad Pic:  </b></label>
-                    <input className="uploadInput" type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
+                    <input className="uploadInput" type="file" name="file"  onChange={(e) => this.onChangeHandler(e)} ref={ref=> this.fileInput = ref} />
                     <label><b>Desc: </b></label>
-                    <input className="uploadInput" type="text" name="desc" onChange={(e)=> this.descChangeHandler(e)}></input>
+                    <input className="uploadInput" type="text" name="desc" value={this.state.desc}  onChange={(e)=> this.descChangeHandler(e)}></input>
                     <button type="submit" onClick={this.formHandler}>Submit</button>
                 </div>
                 <h4 className="Status">{this.state.status}</h4>

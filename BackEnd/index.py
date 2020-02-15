@@ -149,7 +149,11 @@ def get_presighned_url(url):
 
 def give_constraints_vals(constaints_name, search_key):
     first_index_tags = search_key.find(constaints_name) + len(constaints_name)
+    print(first_index_tags)
     last_index_tags = search_key[first_index_tags:].find(" ") + first_index_tags
+    if last_index_tags < first_index_tags:
+        last_index_tags = len(search_key)+1
+    print(last_index_tags)
     return search_key[first_index_tags:last_index_tags]
 
 
@@ -160,14 +164,25 @@ def search():
     search_key = params.get('search')
     query = "Select * from Images"
     where_clause = "where"
+    new_tag_clause=""
+    if "tag:" in search_key:
+        all_tags = give_constraints_vals("tag:", search_key)
+        tags = all_tags.split(',')
+        tags_query_list= list()
+        for tag in tags:
+            # new_tag_clause = new_tag_clause + "tags LIKE '%{}%'".format(tag)
+            tags_query_list.append( "tags LIKE '%{}%'".format(tag))
+        
+        new_tag_clause = " or ".join(tags_query_list)
+        print(new_tag_clause)
 
-    if "tags:" in search_key:
-        all_tags = give_constraints_vals("tags:", search_key)
-        tags = search_key.split(',')
         tags_with_or = "|".join(tags)    
-        tags_clause = "tags REGEXP '{}'".format(tags_with_or) 
+        # tags_clause = "tags REGEXP '{}'".format(tags_with_or) 
 
-        query = "{} {} {}".format(query, where_clause, tags_clause)
+        query = "{} {} {}".format(query, where_clause, new_tag_clause)
+
+        print(query)
+        print("Reallly")
 
     if "date" in search_key:
         date_val = give_constraints_vals("date:", search_key)
@@ -195,17 +210,28 @@ def search():
                 query = "{} {} {}".format(query, "and", day_clause)
             else:
                 query = "{} {} {}".format(query, where_clause, year_clause)
-           
+
+
     from_date = '2020-01-01'
     now = datetime.now()
     to_date = '{}-{}-{}'.format(now.year, now.month, now.day)
+    print("from_date: {}".format(from_date))
+    print("to_date: {}".format(to_date))
+    print("==============================")
+    
+
+
+
     if 'from' in search_key:
         from_date = give_constraints_vals('from:', search_key)
-    from_date_clause = "DATE(date) >= {}".format(from_date_clause)
+    from_date_clause = "DATE(date) >= '{}'".format(from_date)
 
     if 'to' in search_key:
         to_date = give_constraints_vals("to:")
-    to_date_clause = "DATE(date) <= {}".format(from_date_clause)
+    to_date_clause = "DATE(date) <= '{}'".format(to_date)
+
+    print("=================================")
+    print(query)
 
     if where_clause in query:
         query = "{} {} {} {} {}".format(query, "and", from_date_clause, "and", to_date_clause)

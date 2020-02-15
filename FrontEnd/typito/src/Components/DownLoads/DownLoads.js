@@ -90,9 +90,9 @@ class DownLoads extends Component {
     formHandler() {
         console.log("formHandler")
         console.log(this.state)
-        const { date, tags, url_obj } = this.state
+        const { tags } = this.state
 
-        const url = `http://127.0.0.1:5000/search?date=${date}&search=${tags}`
+        const url = `http://127.0.0.1:5000/search?&search=${tags}`
         console.log(url)
         fetch(url)
             .then(responce => responce.json())
@@ -135,9 +135,7 @@ class DownLoads extends Component {
         return (
             <div>
                 <Jumbotron className="search">
-                    <label className="label">Date</label>
-                    <input type="text" name="startdate" placeholder=" dd-mm-yyyy" onChange={(e) => this.startDateChangeHandler(e)} />
-                    <input className="label" type="text" name='tagSearch' placeholder=" TagSearch" onChange={(e) => this.tagHandler(e)} />
+                    <input className="tag_search" type="text" name='tagSearch' placeholder=" TagSearch" onChange={(e) => this.tagHandler(e)} />
                     <button type="submit" onClick={this.formHandler}>Submit</button>
                 </Jumbotron>
                 <Jumbotron className="Jumbo">

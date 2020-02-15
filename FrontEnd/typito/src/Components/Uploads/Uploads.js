@@ -8,19 +8,10 @@ class Uploads extends Component {
 
     state = {
         'status': "",
-        'endDate': null,
-        'startDate': null
+        'file': null,
+        'desc': ""
     }
 
-    startDateChangeHandler(e) {
-        e.preventDefault();
-        this.setState({'startDate': e.target.value})
-    }
-
-    endDateChangeHandler(e) {
-        e.preventDefault();
-        this.setState({'endDate': e.target.value})
-    }
 
     onChangeHandler(e) {
         e.preventDefault();
@@ -28,6 +19,7 @@ class Uploads extends Component {
         let files = e.target.files;
 
         data.append('myfile', files[0])
+
         console.log("data====>", data)
 
         fetch('http://127.0.0.1:5000/upload', {
@@ -47,11 +39,23 @@ class Uploads extends Component {
         console.log("formHandler")
     }
 
+    descChangeHandler(e) {
+        e.preventDefault()
+        console.log("inside desc Handler")
+        console.log(e.target.value)
+        this.setState({'desc':e.target.value})
+
+    }
+
     render() {
         return (
             <div>
                 <div>
+                    <label><b>UpLoad Pic:  </b></label>
                     <input className="uploadInput" type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
+                    <label><b>Desc: </b></label>
+                    <input className="uploadInput" type="text" name="desc" onChange={(e)=> this.descChangeHandler(e)}></input>
+
                 </div>
                 <h4 className="Status">{this.state.status}</h4>
             </div>

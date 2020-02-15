@@ -1,12 +1,10 @@
 .UploadedPic {
     width: 230px;
     height: 150px;
-    margin:1em;
+    margin: 0em 1em 1em 1em;
     flex-shrink: 0;
     flex-grow: 0;
     border-radius:7px
-    /* align-self: flex-start; */
-    /* margin-left: 0em; */
 
   }
 
@@ -21,32 +19,24 @@
   }
 
 .tags {
-  /* width: 150px; */
   height: auto;
-  font-size: 1em;
+  font-size: 0.9em;
   text-align: left;
   padding-left: 1em;  
 }
 
 .imagerow {
-  /* display: inline-block; */
-  /* text-align: center; */
   box-shadow: 10px 10px 10px rgb(173, 172, 172); 
   background-color: rgb(247, 248, 248);
-  margin: 1em;
+  margin: 0em 1em 1em 1em;
   align-self: flex-start;
   flex-flow: column;
   border-radius:7px
 }
 
 .urls {
-  /* display: inline-block; */
   display: flex;
   flex-wrap: wrap;
-  /* flex-shrink: 0 */
-  /* text-align: center; */
-  /* align-self: flex-start; */
-  /* flex-flow: column; */
 }
 
 .search {
@@ -54,15 +44,27 @@
 }
 
 .search {
-  /* margin-top: 0em; */
-  /* margin-bottom: 0em; */
+
   height: 1em;
   padding-top: 10px;
   margin: 1em;
   margin-left: 9em;
   margin-right: 9em;
-  /* display: flex; */
-  /* justify-content: flex start;  */
+
   background-color: #c93838
   
+}
+
+.upload_date {
+  font-size: 0.8em;
+  color: grey;
+  margin: 0.5em 0em 0.3em 1.3em;
+  text-align: left;
+}
+
+.desc {
+  height: auto;
+  font-size: 0.9em;
+  text-align: left;
+  padding-left: 1em;  
 }

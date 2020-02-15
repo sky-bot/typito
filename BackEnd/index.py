@@ -95,8 +95,9 @@ def row2dict(row):
 @app.route('/upload', methods=['POST'])
 def upload():
     s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
-    file = request.files['myfile']
     
+    desc = request.values.get('desc')
+    file = request.files.get('myfile')
     filename = 'API_' + file.filename
     print(filename)
     try:
@@ -118,15 +119,12 @@ def upload():
     month = now.month
     day = now.day
 
-    from datetime import date
-    today = date.today()
-# dd/mm/YY
-    today = today.strftime("%d/%m/%Y")
-
+    today = datetime.now().replace(microsecond=0)
+    
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
     final_url = "{}{}{}".format(baseUrl, '/', filename)
-    desc = "testing"
-    new_entry = Images(final_url, json.dumps(tags), day, month, year, desc)
+    
+    new_entry = Images(final_url, json.dumps(tags), day, month, year, today, desc)
 
     db.session.add(new_entry)
     db.session.commit()

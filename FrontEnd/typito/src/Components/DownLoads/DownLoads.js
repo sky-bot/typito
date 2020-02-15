@@ -20,17 +20,6 @@ class DownLoads extends Component {
         }
         this.formHandler = this.formHandler.bind(this)
       }
-    // state = {
-    //     urls: [],
-    //     perPage: 8,
-    //     page: 1,
-    //     totalPage: null,
-    //     scrolling: false,
-    //     url_obj: [],
-    //     from: "",
-    //     to: "",
-    //     tags: "",
-    // }
 
 
     componentDidMount() {
@@ -102,11 +91,6 @@ class DownLoads extends Component {
         console.log("formHandler")
         console.log(this.state)
         const { date, tags, url_obj } = this.state
-        // const from= this.state.from
-        // const to = this.state.from
-        // const tags = this.state.tags
-        // const url_obj = this.state.url_obj
-
 
         const url = `http://127.0.0.1:5000/search?date=${date}&search=${tags}`
         console.log(url)
@@ -138,9 +122,14 @@ class DownLoads extends Component {
 
         for (let i = 0; i < url_obj.length; i++) {
             pics.push(<div className="imagerow box">
+                <h5 className="upload_date"><i>Uploaded On: </i>{url_obj[i].day}-{url_obj[i].month}-{url_obj[i].year}</h5>
                 <img src={url_obj[i].url} alt="pic" className="UploadedPic" />
-                <h5 className="tags"><b><i>Tags:</i></b>{url_obj[i].tags.join(",")}</h5>
-                <h5 className="tags"><b><i>Uploaded On: </i></b>{url_obj[i].day}-{url_obj[i].month}-{url_obj[i].year}</h5>
+                <div>
+                <h5 className="tags"><b><i>Tags: </i></b>{url_obj[i].tags.join(", ")}</h5>
+                <h5 className="desc"><b><i>Desc: </i></b>{url_obj[i].desc}</h5>
+                </div>
+               
+               
             </div>)
         }
         return (
@@ -148,8 +137,6 @@ class DownLoads extends Component {
                 <Jumbotron className="search">
                     <label className="label">Date</label>
                     <input type="text" name="startdate" placeholder=" dd-mm-yyyy" onChange={(e) => this.startDateChangeHandler(e)} />
-                    {/* <label className="label">To</label>
-                    <input type="text" name="enddate"  placeholder=" dd-mm-yyyy" onChange={(e) => this.endDateChangeHandler(e)} /> */}
                     <input className="label" type="text" name='tagSearch' placeholder=" TagSearch" onChange={(e) => this.tagHandler(e)} />
                     <button type="submit" onClick={this.formHandler}>Submit</button>
                 </Jumbotron>

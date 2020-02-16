@@ -22,11 +22,10 @@ class Uploads extends Component {
 
     onChangeHandler(e) {
         e.preventDefault();
-        const data = new FormData();
         let files = e.target.files;
-
-        this.setState({'file': files[0]})
-
+        this.setState({'file': files})
+        
+        console.log(files)
     }
 
     formHandler() {
@@ -34,33 +33,33 @@ class Uploads extends Component {
         const data = new FormData();
         let file = this.state.file;
         let desc = this.state.desc;
-
-        data.append('myfile', file)
-        data.append('desc', desc)
-
-
-
-        fetch('http://127.0.0.1:5000/upload', {
-            method: 'POST',
-            body: data,
-        }).then(responce => responce.json())
-            .then(json => {
-
-                this.setState({ "status": json.status })
-                setTimeout(function () {
-                    this.setState({"status": ""});
-                }.bind(this), 5000);
-               
-            })
-        console.log("It seems working")
-         this.setState({'desc': "", 'file': null})
-         this.fileInput.value = "";
+        console.log(file.length)
+        for(let i=0;i<file.length;i++){
+            data.append('myfile', file[0])
+            console.log(file[0])
+            data.append('desc', desc)
+    
+            fetch('http://127.0.0.1:5000/upload', {
+                method: 'POST',
+                body: data,
+                // headers:{'Content-Type': 'multipart/form-data', 'enctype':'multipart/form-data'}
+            }).then(responce => responce.json())
+                .then(json => {
+                    this.setState({ "status": json.status })
+                    setTimeout(function () {
+                        this.setState({"status": ""});
+                    }.bind(this), 2000);
+                })
+            console.log("It seems working")
+             this.setState({'desc': "", 'file': null})
+        }
+        this.fileInput.value = "";
+    
     }
-
+       
     descChangeHandler(e) {
         e.preventDefault()
         this.setState({'desc':e.target.value})
-
     }
 
     render() {
@@ -68,7 +67,7 @@ class Uploads extends Component {
             <div>
                 <div>
                     <label><b>UpLoad Pic:  </b></label>
-                    <input className="uploadInput" type="file" name="file"  onChange={(e) => this.onChangeHandler(e)} ref={ref=> this.fileInput = ref} />
+                    <input className="uploadInput" type="file" multiple name="file"  onChange={(e) => this.onChangeHandler(e)} ref={ref=> this.fileInput = ref} />
                     <label><b>Desc: </b></label>
                     <input className="uploadInput" type="text" name="desc" value={this.state.desc}  onChange={(e)=> this.descChangeHandler(e)}></input>
                     <button type="submit" onClick={this.formHandler}>Submit</button>

@@ -15,7 +15,7 @@
     background-color: rgb(213, 253, 247);
     display: flex;
     justify-content: flex start;
-   
+    display: block;
   }
 
 .tags {
@@ -31,7 +31,9 @@
   margin: 0em 1em 1em 1em;
   align-self: flex-start;
   flex-flow: column;
-  border-radius:7px
+  border-radius:7px;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .urls {
@@ -72,5 +74,9 @@
 .tag_search {
     margin: 1em;
     width: 20em;
+}
 
+.image_text {
+  word-wrap: break-word;
+  width: 15em;
 }

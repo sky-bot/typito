@@ -40,7 +40,7 @@ ma = Marshmallow(app)
 class Images(db.Model):
     log_id = db.Column(db.Integer, primary_key= True)
     url = db.Column(db.String(100), unique=True)
-    tags = db.Column(db.String(100), unique=True)
+    tags = db.Column(db.String(100))
     day = db.Column(db.Integer)
     month = db.Column(db.Integer)
     year = db.Column(db.Integer)
@@ -94,14 +94,15 @@ def row2dict(row):
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    print("API Started")
     s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
-    
+    files = request.files.get('myfile')
+   
     desc = request.values.get('desc')
-    file = request.files.get('myfile')
-    filename = 'API_' + file.filename
-    print(filename, desc)
+    print("Start Rekognition")
+    filename = 'API_' + files.filename
     try:
-        data = request.files['myfile']
+        data = files
         s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=data)
    
         rek = boto3.client('rekognition', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY, region_name='us-east-2')
@@ -113,7 +114,7 @@ def upload():
     except Exception as e:  
         print(e)  # to be replaced by logger
         tags = ["No detail Available"]
-
+    print("End rekognition")
     now = datetime.now()
     year = now.year
     month = now.month
@@ -123,13 +124,13 @@ def upload():
     
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
     final_url = "{}{}{}".format(baseUrl, '/', filename)
-    
+    print("Start DB")
     new_entry = Images(final_url, json.dumps(tags), day, month, year, today, desc)
 
     db.session.add(new_entry)
     db.session.commit()
-
-    return json.dumps({'status': "Uploaded SuccessFully :)"})
+    print("end db")
+    return json.dumps({'status': "{} Uploaded SuccessFully :)".format(files.filename)})
 
 
 def get_presighned_url(url):
@@ -215,13 +216,7 @@ def search():
     from_date = '2020-01-01'
     now = datetime.now()
     to_date = '{}-{}-{}'.format(now.year, now.month, now.day)
-    print("from_date: {}".format(from_date))
-    print("to_date: {}".format(to_date))
-    print("==============================")
     
-
-
-
     if 'from' in search_key:
         from_date = give_constraints_vals('from:', search_key)
     from_date_clause = "DATE(date) >= '{}'".format(from_date)
@@ -229,8 +224,6 @@ def search():
     if 'to' in search_key:
         to_date = give_constraints_vals("to:")
     to_date_clause = "DATE(date) <= '{}'".format(to_date)
-
-    print("=================================")
     print(query)
 
     if where_clause in query:
@@ -263,4 +256,4 @@ def row_to_dict(row):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, processes=4, threaded=False)

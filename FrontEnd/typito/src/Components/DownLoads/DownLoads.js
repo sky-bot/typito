@@ -114,6 +114,7 @@ class DownLoads extends Component {
             })
     }
 
+
     render() {
         const pics = []
         const url_obj = this.state.url_obj
@@ -124,16 +125,16 @@ class DownLoads extends Component {
             pics.push(<div className="imagerow box">
                 <h5 className="upload_date"><i>Uploaded On: </i>{url_obj[i].day}-{url_obj[i].month}-{url_obj[i].year}</h5>
                 <img src={url_obj[i].url} alt="pic" className="UploadedPic" />
-                <div>
-                <h5 className="tags"><b><i>Tags: </i></b>{url_obj[i].tags.join(", ")}</h5>
-                <h5 className="desc"><b><i>Desc: </i></b>{url_obj[i].desc}</h5>
+                <div className="image_text">
+                    <h5 className="tags"><b><i>Tags: </i></b>{url_obj[i].tags.join(", ")}</h5>
+                    <h5 className="desc"><b><i>Desc: </i></b>{url_obj[i].desc}</h5>
                 </div>
                
                
             </div>)
         }
         return (
-            <div>
+            <div    >
                 <Jumbotron className="search">
                     <input className="tag_search" type="text" name='tagSearch' placeholder=" TagSearch" onChange={(e) => this.tagHandler(e)} />
                     <button type="submit" onClick={this.formHandler}>Submit</button>

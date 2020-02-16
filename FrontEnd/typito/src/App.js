@@ -12,7 +12,8 @@ class App extends Component {
     "allurls": [],
     "uploading": false,
     "startDate": null,
-    "endDate": null
+    "endDate": null,
+    "refresh": 0
   }
 
   render() {
@@ -30,11 +31,9 @@ class App extends Component {
         <header className="App-header">
           <h1> SkyLinsta </h1>
         </header>
-        <UpLoads/>
-        {/* <Jumbotron className="Jumbo_Search"><Search /></Jumbotron> */}
+        <UpLoads refresh={this.state.refresh}/>
 
         <DownLoads />
-        {/* <Jumbotron fluid className="Jumbo">{ pics }</Jumbotron> */}
 
       </div>
     );

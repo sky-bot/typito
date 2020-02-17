@@ -13,7 +13,13 @@ class App extends Component {
     "uploading": false,
     "startDate": null,
     "endDate": null,
-    "refresh": 0
+    "refresh": true
+  }
+
+  refreshHandler() {
+    let refresh_val = this.state.refresh
+    this.setState({'refresh':!refresh_val});
+    console.log("Can be submitted")
   }
 
   render() {
@@ -23,7 +29,9 @@ class App extends Component {
 
     for (let i = 0; i < urls.length; i++) {
       pics.push(<img src={urls[i]} alt="pic" className="UploadedPic" />)
-    }
+    };
+
+   
 
 
     return (
@@ -31,9 +39,9 @@ class App extends Component {
         <header className="App-header">
           <h1> SkyLinsta </h1>
         </header>
-        <UpLoads refresh={this.state.refresh}/>
+        <UpLoads refresh={this.refreshHandler.bind(this)}/>
 
-        <DownLoads />
+        <DownLoads refresh={this.refreshHandler.bind(this)}/>
 
       </div>
     );

@@ -17,6 +17,7 @@ class DownLoads extends Component {
             date: "",
             // to: "",
             tags: "",
+            refresh: true
         }
         this.formHandler = this.formHandler.bind(this)
       }
@@ -26,6 +27,9 @@ class DownLoads extends Component {
         this.loadUrls()
         this.scrollListener = window.addEventListener('scroll', (e) => {
             this.handleScroll(e)
+            let refresh_val = this.state.refresh
+            this.setState({refresh: !refresh_val})
+            this.props.refresh(this.state.refresh)
         })
     }
 
@@ -66,7 +70,7 @@ class DownLoads extends Component {
 
     loadMore = () => {
         this.setState(prevState => ({
-            page: prevState.page + 1,
+            page    : prevState.page + 1,
             scrolling: true
         }), this.loadUrls);
     }

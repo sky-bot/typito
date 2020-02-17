@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Uploads.css'
+import * as Constant from './../../Constants/Constants'
 
 
 
@@ -14,6 +15,7 @@ class Uploads extends Component {
             'status': "",
             'file':null,
             'desc': " ",
+            'refresh': true
         }
         this.formHandler = this.formHandler.bind(this)
       }
@@ -29,38 +31,43 @@ class Uploads extends Component {
     }
 
     formHandler() {
-        
-        const data = new FormData();
+
+        console.log(Constant.URL)
         let file = this.state.file;
         let desc = this.state.desc;
         console.log(file.length)
         for(let i=0;i<file.length;i++){
-            data.append('myfile', file[0])
-            console.log(file[0])
+            const data = new FormData();
+            data.append('myfile', file[i])
+            console.log(file[i])
             data.append('desc', desc)
-    
             fetch('http://127.0.0.1:5000/upload', {
                 method: 'POST',
                 body: data,
-                // headers:{'Content-Type': 'multipart/form-data', 'enctype':'multipart/form-data'}
             }).then(responce => responce.json())
                 .then(json => {
                     this.setState({ "status": json.status })
                     setTimeout(function () {
                         this.setState({"status": ""});
-                    }.bind(this), 2000);
+                        let refresh_val = this.state.refresh
+        
+                        this.setState({'refresh': !refresh_val})
+                        this.props.refresh(this.state.refresh)
+                    }.bind(this), 5000);
                 })
             console.log("It seems working")
-             this.setState({'desc': "", 'file': null})
+            this.setState({'desc': "", 'file': null})
         }
         this.fileInput.value = "";
-    
+        
     }
        
     descChangeHandler(e) {
         e.preventDefault()
         this.setState({'desc':e.target.value})
+
     }
+
 
     render() {
         return (
@@ -70,7 +77,7 @@ class Uploads extends Component {
                     <input className="uploadInput" type="file" multiple name="file"  onChange={(e) => this.onChangeHandler(e)} ref={ref=> this.fileInput = ref} />
                     <label><b>Desc: </b></label>
                     <input className="uploadInput" type="text" name="desc" value={this.state.desc}  onChange={(e)=> this.descChangeHandler(e)}></input>
-                    <button type="submit" onClick={this.formHandler}>Submit</button>
+                    <button type="submit" onClick={this.formHandler.bind(this)}>Submit</button>
                 </div>
                 <h4 className="Status">{this.state.status}</h4>
             </div>

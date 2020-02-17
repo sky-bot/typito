@@ -16,6 +16,7 @@ from sqlalchemy import create_engine
 from flask_migrate import Migrate
 from sqlalchemy import inspect
 import os
+import _thread, threading
 from sqlalchemy.sql import func
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -23,6 +24,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4"
 ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"
 BUCKET_NAME = 'typito'
+THREAD = [] 
 app = Flask(__name__)
 flask_cors.CORS(app, expose_headers='Authorization')
 
@@ -101,6 +103,8 @@ def upload():
     desc = request.values.get('desc')
     print("Start Rekognition")
     filename = 'API_' + files.filename
+    print("==============filename:", filename)
+    
     try:
         data = files
         s3.Bucket(BUCKET_NAME).put_object(Key=filename, Body=data)
@@ -110,6 +114,7 @@ def upload():
                                      MaxLabels=3, MinConfidence=80)
         lables_list = response.get('Labels')
         tags = [tags.get('Name') for tags in lables_list]
+        print("tags-> ", tags)
 
     except Exception as e:  
         print(e)  # to be replaced by logger
@@ -125,12 +130,21 @@ def upload():
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
     final_url = "{}{}{}".format(baseUrl, '/', filename)
     print("Start DB")
-    new_entry = Images(final_url, json.dumps(tags), day, month, year, today, desc)
-
-    db.session.add(new_entry)
-    db.session.commit()
+    
+    t = threading.Thread(target=db_entry, args=(final_url, tags, day, month, year, today, desc))
+    THREAD.append(t)
+    t.start()
+    t.join()
     print("end db")
     return json.dumps({'status': "{} Uploaded SuccessFully :)".format(files.filename)})
+
+
+def db_entry(final_url, tags, day, month, year, today, desc):
+    print("thread start")
+    new_entry = Images(final_url, json.dumps(tags), day, month, year, today, desc)
+    db.session.add(new_entry)
+    db.session.commit()
+    print("thread end")
 
 
 def get_presighned_url(url):

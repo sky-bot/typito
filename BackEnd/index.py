@@ -220,13 +220,11 @@ def search():
         from_date = give_constraints_vals('from:', search_key)
         formatted_date = from_date.split("-")
 
-        print(formatted_date, from_date)
         _year = formatted_date[2]
         _month = formatted_date[1]
         _day = formatted_date[0]
         from_date = "{}-{}-{}".format(_year, _month, _day)
-        print("========")
-        print(from_date)
+    
     from_date_clause = "DATE(date) >= '{}'".format(from_date)
 
     if 'to' in search_key:
@@ -247,7 +245,7 @@ def search():
 
     query = "{} {}".format(query, "order by log_id desc")
     urls2 = []
-    print(query)
+
     with engine.connect() as con:
         rs = con.execute(query)
         for row in rs:

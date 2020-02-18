@@ -91,18 +91,15 @@ class DownLoads extends Component {
     }
 
     formHandler() {
-        console.log("formHandler")
-        console.log(this.state)
+
         const { tags } = this.state
 
         const url = `http://18.191.241.122:5001/search?&search=${tags}`
-        console.log(url)
+  
         fetch(url)
             .then(responce => responce.json())
             .then(json => {
-                console.log("Its working")
                 const image_urls = json.result
-                console.log(image_urls)
                 const temp_urls = []
                 for (let i = 0; i < image_urls.length; i++) {
                     let temp_obj = image_urls[i]

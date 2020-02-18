@@ -96,14 +96,13 @@ def row2dict(row):
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    print("API Started")
+
     s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
     files = request.files.get('myfile')
    
     desc = request.values.get('desc')
-    print("Start Rekognition")
+
     filename = 'API_' + files.filename
-    print("==============filename:", filename)
     
     try:
         data = files
@@ -114,12 +113,9 @@ def upload():
                                      MaxLabels=3, MinConfidence=80)
         lables_list = response.get('Labels')
         tags = [tags.get('Name') for tags in lables_list]
-        print("tags-> ", tags)
 
     except Exception as e:  
-        print(e)  # to be replaced by logger
         tags = ["No detail Available"]
-    print("End rekognition")
     now = datetime.now()
     year = now.year
     month = now.month
@@ -129,22 +125,19 @@ def upload():
     
     baseUrl = 'https://' + BUCKET_NAME + '.s3.us-east-2.amazonaws.com'
     final_url = "{}{}{}".format(baseUrl, '/', filename)
-    print("Start DB")
     
     t = threading.Thread(target=db_entry, args=(final_url, tags, day, month, year, today, desc))
     THREAD.append(t)
     t.start()
     t.join()
-    print("end db")
+
     return json.dumps({'status': "{} Uploaded SuccessFully :)".format(files.filename)})
 
 
 def db_entry(final_url, tags, day, month, year, today, desc):
-    print("thread start")
     new_entry = Images(final_url, json.dumps(tags), day, month, year, today, desc)
     db.session.add(new_entry)
     db.session.commit()
-    print("thread end")
 
 
 def get_presighned_url(url):
@@ -164,11 +157,9 @@ def get_presighned_url(url):
 
 def give_constraints_vals(constaints_name, search_key):
     first_index_tags = search_key.find(constaints_name) + len(constaints_name)
-    print(first_index_tags)
     last_index_tags = search_key[first_index_tags:].find(" ") + first_index_tags
     if last_index_tags < first_index_tags:
         last_index_tags = len(search_key)+1
-    print(last_index_tags)
     return search_key[first_index_tags:last_index_tags]
 
 
@@ -185,19 +176,13 @@ def search():
         tags = all_tags.split(',')
         tags_query_list= list()
         for tag in tags:
-            # new_tag_clause = new_tag_clause + "tags LIKE '%{}%'".format(tag)
             tags_query_list.append( "tags LIKE '%{}%'".format(tag))
         
         new_tag_clause = " or ".join(tags_query_list)
-        print(new_tag_clause)
 
         tags_with_or = "|".join(tags)    
-        # tags_clause = "tags REGEXP '{}'".format(tags_with_or) 
 
         query = "{} {} {}".format(query, where_clause, new_tag_clause)
-
-        print(query)
-        print("Reallly")
 
     if "date" in search_key:
         date_val = give_constraints_vals("date:", search_key)
@@ -238,7 +223,6 @@ def search():
     if 'to' in search_key:
         to_date = give_constraints_vals("to:")
     to_date_clause = "DATE(date) <= '{}'".format(to_date)
-    print(query)
 
     if where_clause in query:
         query = "{} {} {} {} {}".format(query, "and", from_date_clause, "and", to_date_clause)

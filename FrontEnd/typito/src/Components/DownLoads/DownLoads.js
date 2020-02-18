@@ -15,7 +15,6 @@ class DownLoads extends Component {
             scrolling: false,
             url_obj: [],
             date: "",
-            // to: "",
             tags: "",
             refresh: true
         }

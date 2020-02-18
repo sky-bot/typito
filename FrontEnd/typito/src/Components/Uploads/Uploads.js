@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Uploads.css'
-import * as Constant from './../../Constants/Constants'
-
 
 
 class Uploads extends Component {
@@ -27,38 +25,40 @@ class Uploads extends Component {
         let files = e.target.files;
         this.setState({'file': files})
         
-        console.log(files)
     }
 
     formHandler() {
 
-        console.log(Constant.URL)
         let file = this.state.file;
         let desc = this.state.desc;
-        console.log(file.length)
-        for(let i=0;i<file.length;i++){
-            const data = new FormData();
-            data.append('myfile', file[i])
-            console.log(file[i])
-            data.append('desc', desc)
-            fetch('http://127.0.0.1:5000/upload', {
-                method: 'POST',
-                body: data,
-            }).then(responce => responce.json())
-                .then(json => {
-                    this.setState({ "status": json.status })
-                    setTimeout(function () {
-                        this.setState({"status": ""});
-                        let refresh_val = this.state.refresh
-        
-                        this.setState({'refresh': !refresh_val})
-                        this.props.refresh(this.state.refresh)
-                    }.bind(this), 5000);
-                })
-            console.log("It seems working")
-            this.setState({'desc': "", 'file': null})
+
+        if(file != null) {
+            for(let i=0;i<file.length;i++){
+                const data = new FormData();
+                data.append('myfile', file[i])
+
+                data.append('desc', desc)
+                fetch('http://127.0.0.1:5000/upload', {
+                    method: 'POST',
+                    body: data,
+                }).then(responce => responce.json())
+                    .then(json => {
+                        this.setState({ "status": json.status })
+                        setTimeout(function () {
+                            this.setState({"status": ""});
+                            
+                        }.bind(this), 5000);
+                    })
+
+                this.setState({'desc': "", 'file': null})
+            }
+
+            let refresh_val = this.state.refresh
+            this.setState({'refresh': !refresh_val})
+            this.props.refresh(this.state.refresh)
+            this.fileInput.value = "";
         }
-        this.fileInput.value = "";
+        
         
     }
        

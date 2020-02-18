@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Jumbotron from 'react-bootstrap/Jumbotron'
+
 import './App.css';
 import UpLoads from './Components/Uploads/Uploads'
 import DownLoads from './Components/DownLoads/DownLoads'
-import Search from './Components/Search/Search'
+
 
 class App extends Component {
 

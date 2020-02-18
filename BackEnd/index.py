@@ -232,13 +232,11 @@ def search():
     if 'to' in search_key:
         to_date = give_constraints_vals("to:", search_key)
         formatted_date = to_date.split("-")
-        print(formatted_date)
         _year = formatted_date[2]
         _month = formatted_date[1]
         _day = formatted_date[0]
         to_date = "{}-{}-{}".format(_year, _month, _day)
-        print("===")
-        print(to_date)
+
 
     to_date_clause = "DATE(date) <= '{}'".format(to_date)
 

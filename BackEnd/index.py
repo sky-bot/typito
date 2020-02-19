@@ -300,4 +300,4 @@ def row_to_dict(row):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, processes=4, threaded=False)
+    app.run(debug=True, processes=8, threaded=False)

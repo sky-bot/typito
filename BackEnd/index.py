@@ -78,7 +78,7 @@ def index():
     firstIndex = (page-1)*perPage
 
     urls2 = []
-    all_images = Images.query.order_by(Images.log_id.desc()).limit(30).all()
+    all_images = Images.query.order_by(Images.log_id.desc()).all()
     for image in all_images:
         temp = row2dict(image)
         temp['tags'] = json.loads(temp.get('tags') or ["No data Available"])

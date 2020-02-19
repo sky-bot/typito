@@ -18,6 +18,7 @@ from sqlalchemy import inspect
 import os
 import _thread, threading
 from sqlalchemy.sql import func
+import re
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -186,28 +187,44 @@ def search():
 
     if "date" in search_key:
         date_val = give_constraints_vals("date:", search_key)
-        day = date_val.split('-')[0]
-        month = date_val.split('-')[1]
-        year = date_val.split('-')[2]
+        temp_val = date_val.split("-")
 
-        if '*' not in day:
+        try: 
+            day = date_val.split('-')[0]
+            month = date_val.split('-')[1]
+            year = date_val.split('-')[2]
+        except Exception as e:
+            day = None
+            month = None
+            year = None
+            print(e)
+
+        if len(temp_val) == 2:
+            year = temp_val[-1]
+            month = temp_val 
+
+        if len(temp_val)==1:
+            year = temp_val[0]
+       
+
+        if '*' not in day and day:
             day_clause = "day = {}".format(day)
             if where_clause in query:
                 query = "{} {} {}".format(query, "and", day_clause)
             else:
                 query = "{} {} {}".format(query, where_clause, day_clause)
            
-        if '*' not in month:
+        if '*' not in month and month:
             month_clause = "month = {}".format(month)
             if where_clause in query:
-                query = "{} {} {}".format(query, "and", day_clause)
+                query = "{} {} {}".format(query, "and", month_clause)
             else:
                 query = "{} {} {}".format(query, where_clause, month_clause)
 
-        if '*' not in year:
+        if '*' not in year and year:
             year_clause = "year = {}".format(year)
             if where_clause in query:
-                query = "{} {} {}".format(query, "and", day_clause)
+                query = "{} {} {}".format(query, "and", year_clause)
             else:
                 query = "{} {} {}".format(query, where_clause, year_clause)
 
@@ -236,6 +253,18 @@ def search():
         to_date = "{}-{}-{}".format(_year, _month, _day)
 
 
+    if 'desc' in search_key:
+        search_text = give_constraints_vals("desc:", search_key)  
+        if '"' in search_key:
+            search_text = re.findall(r'"([^"]*)"', search_key)[0]
+            print(search_text)
+
+        desc_clause = 'desc like "%{}%"'.format(search_text)    
+        if where_clause in query:
+            query = "{} {} {}".format(query, "and", desc_clause)
+        else:
+            query = "{} {} {}".format(query, where_clause,desc_clause)
+
     to_date_clause = "DATE(date) <= '{}'".format(to_date)
 
     if where_clause in query:
@@ -245,6 +274,7 @@ def search():
 
     query = "{} {}".format(query, "order by log_id desc")
     urls2 = []
+    print(query)
     try:
         with engine.connect() as con:
             rs = con.execute(query)

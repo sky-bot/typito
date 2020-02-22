@@ -234,7 +234,7 @@ def search():
         search_text = give_constraints_vals("desc:", search_key)  
         if '"' in search_key:
             search_text = re.findall(r'"([^"]*)"', search_key)[0]
-            print(search_text)
+            app.logger.info(search_text)
 
         desc_clause = 'desc like "%{}%"'.format(search_text)    
         if where_clause in query:
@@ -251,14 +251,14 @@ def search():
 
     query = "{} {}".format(query, "order by log_id desc")
     urls2 = []
-    print(query)
+    app.logger.info("query->" + query)
     try:
         with engine.connect() as con:
             rs = con.execute(query)
             for row in rs:
                 urls2.append(row_to_dict(row))
     except Exception as e:
-        print(e)
+        app.logger.info("error->", e)
         urls2 = []
     return json.dumps({'result': urls2, 'count': len(urls2)})
 

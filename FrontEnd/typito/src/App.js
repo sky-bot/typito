@@ -37,7 +37,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1> SkyLinsta </h1>
+          <h1 className="heading"> SkyLinsta </h1>
         </header>
         <UpLoads refresh={this.refreshHandler.bind(this)}/>
 

@@ -12,7 +12,7 @@
     margin: 1em;
     margin-left: 9em;
     margin-right: 9em;
-    background-color: rgb(213, 253, 247);
+    background-color: rgb(247, 247, 247);
     display: flex;
     justify-content: flex start;
     display: block;
@@ -27,8 +27,9 @@
 
 .imagerow {
   box-shadow: 10px 10px 10px rgb(173, 172, 172); 
-  background-color: rgb(247, 248, 248);
+  background-color: white;
   margin: 0em 1em 1em 1em;
+  margin-top: 0em;
   align-self: flex-start;
   flex-flow: column;
   border-radius:7px;
@@ -53,7 +54,7 @@
   margin-left: 9em;
   margin-right: 9em;
 
-  background-color: #c93838
+  background-color: rgba(226, 223, 223, 0.993)
   
 }
 

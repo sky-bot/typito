@@ -181,53 +181,31 @@ def search():
         
         new_tag_clause = " or ".join(tags_query_list)
 
-        tags_with_or = "|".join(tags)    
-
         query = "{} {} {}".format(query, where_clause, new_tag_clause)
 
     if "date" in search_key:
         date_val = give_constraints_vals("date:", search_key)
-        temp_val = date_val.split("-")
+        print(date_val)
+        date_val = date_val.split("-")
+        date_val.reverse()
+        print(date_val)
+        date_val = "-".join(date_val)
+        print(date_val)
 
-        try: 
-            day = date_val.split('-')[0]
-            month = date_val.split('-')[1]
-            year = date_val.split('-')[2]
-        except Exception as e:
-            day = None
-            month = None
-            year = None
-            print(e)
-
-        if len(temp_val) == 2:
-            year = temp_val[-1]
-            month = temp_val 
-
-        if len(temp_val)==1:
-            year = temp_val[0]
-       
-
-        if '*' not in day and day:
-            day_clause = "day = {}".format(day)
-            if where_clause in query:
-                query = "{} {} {}".format(query, "and", day_clause)
+        date_clause=""
+        if(len(date_val)>=10):
+            date_clause="DATE(date)='"+date_val+"'"    
+        else:
+            if('*' in date_val):
+                date_clause="DATE(date) LIKE '"+date_val.replace('*','%')+"'"
             else:
-                query = "{} {} {}".format(query, where_clause, day_clause)
-           
-        if '*' not in month and month:
-            month_clause = "month = {}".format(month)
-            if where_clause in query:
-                query = "{} {} {}".format(query, "and", month_clause)
-            else:
-                query = "{} {} {}".format(query, where_clause, month_clause)
+                date_clause="DATE(date) LIKE '%"+date_val+"%'"
+            
 
-        if '*' not in year and year:
-            year_clause = "year = {}".format(year)
-            if where_clause in query:
-                query = "{} {} {}".format(query, "and", year_clause)
-            else:
-                query = "{} {} {}".format(query, where_clause, year_clause)
-
+        if(where_clause in query):
+            query = " {} {} {} ".format(query, "and", date_clause)
+        else:
+            query = " {} {} {} ".format(query,where_clause, date_clause)        
 
     from_date = '2020-01-01'
     now = datetime.now()

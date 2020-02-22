@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from flask import render_template
 from flask import Flask, request, jsonify
 import flask_cors 
-import json
+import json, logging
 from flask import Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -185,12 +185,11 @@ def search():
 
     if "date" in search_key:
         date_val = give_constraints_vals("date:", search_key)
-        print(date_val)
         date_val = date_val.split("-")
         date_val.reverse()
-        print(date_val)
+        
         date_val = "-".join(date_val)
-        print(date_val)
+        
 
         date_clause=""
         if(len(date_val)>=10):
@@ -278,4 +277,23 @@ def row_to_dict(row):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, processes=8, threaded=False)
+    app.run(debug=True, threaded=True)
+else:
+    gunicorn_logger = logging.getLogger("gunicorn.error")
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
+
+
+
+
+
+
+
+
+
+
+
+
+#gunicorn --bind 0.0.0.0:5001 wsgi:app --daemon
+# GUNICORN_CMD_ARGS="--bind=0.0.0.0:5001 --workers=8" gunicorn wsgi:app -k gevent --worker-connections 8 --log-level=info --log-file /home/ubuntu/typito/typito.log --reload --daemon

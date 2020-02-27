@@ -22,8 +22,8 @@ import re
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4"
-ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"
+ACCESS_ID = ""
+ACCESS_KEY = ""
 BUCKET_NAME = 'typito'
 THREAD = [] 
 app = Flask(__name__)

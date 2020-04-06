@@ -22,8 +22,6 @@ import re
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-ACCESS_ID = "AKIAQGGS2CUXIVXVKJO4"
-ACCESS_KEY = "8xnOcNa914FxVj3iA4K9Qjefpk84cWSvhmRzWVO+"
 BUCKET_NAME = 'typito'
 THREAD = [] 
 app = Flask(__name__)
@@ -282,18 +280,6 @@ else:
     gunicorn_logger = logging.getLogger("gunicorn.error")
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
-
-
-
-
-
-
-
-
-
-
-
-
 
 #gunicorn --bind 0.0.0.0:5001 wsgi:app --daemon
 # GUNICORN_CMD_ARGS="--bind=0.0.0.0:5001 --workers=8" gunicorn wsgi:app -k gevent --worker-connections 8 --log-level=info --log-file /home/ubuntu/typito/typito.log --reload --daemon

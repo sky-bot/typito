@@ -24,7 +24,6 @@ class Uploads extends Component {
         e.preventDefault();
         let files = e.target.files;
         this.setState({'file': files})
-        
     }
 
     formHandler() {
@@ -38,7 +37,7 @@ class Uploads extends Component {
                 data.append('myfile', file[i])
 
                 data.append('desc', desc)
-                fetch('http://18.191.241.122:5001/upload', {
+                fetch('http://127.0.0.1:5000/upload', {
                     method: 'POST',
                     body: data,
                 }).then(responce => responce.json())

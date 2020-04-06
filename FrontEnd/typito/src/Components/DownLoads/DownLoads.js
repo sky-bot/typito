@@ -47,7 +47,7 @@ class DownLoads extends Component {
 
     loadUrls = () => {
         const { perPage, page, urls, url_obj } = this.state
-        const url = `http://18.191.241.122:5001/?perPage=${perPage}&page=${page}`
+        const url = `http://127.0.0.1:5000/?perPage=${perPage}&page=${page}`
         fetch(url)
             .then(responce => responce.json())
             .then(json => {
@@ -94,7 +94,7 @@ class DownLoads extends Component {
 
         const { tags } = this.state
 
-        const url = `http://18.191.241.122:5001/search?&search=${tags}`
+        const url = `http://127.0.0.1:5000/search?&search=${tags}`
   
         fetch(url)
             .then(responce => responce.json())

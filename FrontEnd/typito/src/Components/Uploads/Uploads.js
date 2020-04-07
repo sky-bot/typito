@@ -37,7 +37,7 @@ class Uploads extends Component {
                 data.append('myfile', file[i])
 
                 data.append('desc', desc)
-                fetch('http://127.0.0.1:5000/upload', {
+                fetch('http://13.59.9.52:5001/upload', {
                     method: 'POST',
                     body: data,
                 }).then(responce => responce.json())
